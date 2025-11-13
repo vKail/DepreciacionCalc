@@ -1,4 +1,4 @@
-export type TimeUnit = "years" | "months";
+export type TimeUnit = "years" | "months" | "days";
 
 export type DepreciationMethod = "straight-line" | "sum-of-digits" | "declining-balance" | "production-units";
 
@@ -8,6 +8,8 @@ export interface FormInputs {
   timeUnit: TimeUnit;
   method: DepreciationMethod;
   productionUnits?: number;
+  hasVAT: boolean;
+  vatPercentage?: number;
 }
 
 export interface StraightLineRow {

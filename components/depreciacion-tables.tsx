@@ -41,7 +41,7 @@ export function StraightLineTable({ data, unit }: StraightLineTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : "Mes"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
                 <TableHead className="text-right">Cuota de Depreciación</TableHead>
                 <TableHead className="text-right">Depreciación Acumulada</TableHead>
                 <TableHead className="text-right">Valor Neto en Libros</TableHead>
@@ -97,7 +97,7 @@ export function SumOfDigitsTable({ data, unit }: SumOfDigitsTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : "Mes"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
                 <TableHead className="text-right">Factor</TableHead>
                 <TableHead className="text-right">Porcentaje</TableHead>
                 <TableHead className="text-right">Valor Activo</TableHead>
@@ -165,7 +165,7 @@ export function DecliningBalanceTable({ data, unit }: DecliningBalanceTableProps
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : "Mes"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
                 <TableHead className="text-right">Tasa de Depreciación</TableHead>
                 <TableHead className="text-right">Valor sin Depreciar</TableHead>
                 <TableHead className="text-right">Cuota Depreciación</TableHead>
@@ -229,7 +229,7 @@ export function ProductionUnitsTable({ data, unit }: ProductionUnitsTableProps) 
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : "Mes"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
                 <TableHead className="text-right">Unidades Producidas</TableHead>
                 <TableHead className="text-right">Depreciación por Unidad</TableHead>
                 <TableHead className="text-right">Cuota Depreciación</TableHead>

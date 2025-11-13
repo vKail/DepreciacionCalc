@@ -27,15 +27,25 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
   const [timeUnit, setTimeUnit] = useState<TimeUnit>("years");
   const [method, setMethod] = useState<DepreciationMethod>("straight-line");
   const [productionUnits, setProductionUnits] = useState<string>("");
+  const [hasVAT, setHasVAT] = useState<boolean>(true);
+  const [vatPercentage, setVatPercentage] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    let finalAssetValue = parseFloat(assetValue);
+    if (!hasVAT && vatPercentage) {
+      const vatDecimal = parseFloat(vatPercentage) / 100;
+      finalAssetValue = finalAssetValue * (1 + vatDecimal);
+    }
+
     const inputs: FormInputs = {
       usefulLife: parseFloat(usefulLife),
-      assetValue: parseFloat(assetValue),
+      assetValue: finalAssetValue,
       timeUnit,
       method,
+      hasVAT,
+      vatPercentage: !hasVAT ? parseFloat(vatPercentage) : undefined,
       ...(method === "production-units" && { productionUnits: parseFloat(productionUnits) }),
     };
 
@@ -50,10 +60,65 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+
+            {/* Valor Activo */}
+            <div className="space-y-2">
+              <Label htmlFor="assetValue">Valor del Activo (USD)</Label>
+              <Input
+                id="assetValue"
+                type="number"
+                placeholder="Ej: 10000"
+                value={assetValue}
+                onChange={(e) => setAssetValue(e.target.value)}
+                required
+                min="0"
+                step="any"
+              />
+            </div>
+
+            {/* IVA */}
+            <div className="space-y-2">
+              <Label>¿El valor incluye IVA?</Label>
+              <RadioGroup
+                value={hasVAT ? "yes" : "no"}
+                onValueChange={(value) => setHasVAT(value === "yes")}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="yes" id="vat-yes" />
+                  <Label htmlFor="vat-yes" className="font-normal cursor-pointer">
+                    Sí, ya incluye IVA
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="no" id="vat-no" />
+                  <Label htmlFor="vat-no" className="font-normal cursor-pointer">
+                    No, agregar IVA
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Porcentaje de IVA - Solo si no incluye IVA */}
+            {!hasVAT && (
+              <div className="space-y-2">
+                <Label htmlFor="vatPercentage">Porcentaje de IVA (%)</Label>
+                <Input
+                  id="vatPercentage"
+                  type="number"
+                  placeholder="Ej: 15"
+                  value={vatPercentage}
+                  onChange={(e) => setVatPercentage(e.target.value)}
+                  required
+                  min="0"
+                  max="100"
+                  step="any"
+                />
+              </div>
+            )}
             {/* Vida Útil */}
             <div className="space-y-2">
               <Label htmlFor="usefulLife">
-                Vida Útil ({timeUnit === "years" ? "en años" : "en meses"})
+                Vida Útil ({timeUnit === "years" ? "en años" : timeUnit === "months" ? "en meses" : "en días"})
               </Label>
               <Input
                 id="usefulLife"
@@ -86,23 +151,16 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
                     Meses
                   </Label>
                 </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="days" id="days" />
+                  <Label htmlFor="days" className="font-normal cursor-pointer">
+                    Días
+                  </Label>
+                </div>
               </RadioGroup>
             </div>
 
-            {/* Valor Activo */}
-            <div className="space-y-2">
-              <Label htmlFor="assetValue">Valor del Activo</Label>
-              <Input
-                id="assetValue"
-                type="number"
-                placeholder="Ej: 10000"
-                value={assetValue}
-                onChange={(e) => setAssetValue(e.target.value)}
-                required
-                min="0"
-                step="any"
-              />
-            </div>
+
 
             {/* Método de Depreciación */}
             <div className="space-y-2">

@@ -66,22 +66,24 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-background">
-      <div className="max-w-[1600px] mx-auto">
-        <div className="flex items-center justify-center gap-6 mb-8">
-          <Image
-            src="/FICM.png"
-            alt="Logo FICM"
-            width={350}
-            height={350}
-            className="object-contain"
-          />
+    <div className="min-h-screen p-6 bg-background">
+      <div className="max-w-[1700px] mx-auto">
+        <div className="flex flex-col items-center justify-center gap-4 mb-8 lg:relative lg:flex-row">
+          <div className="lg:absolute lg:left-0">
+            <Image
+              src="/FICM.png"
+              alt="Logo FICM"
+              width={200}
+              height={200}
+              className="object-contain lg:w-[300px] lg:h-[300px]"
+            />
+          </div>
           <div className="text-center">
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-2xl font-bold lg:text-3xl">
               Tecnología del Mantenimiento
             </h1>
-            <h2 className="text-2xl font-semibold text-muted-foreground mt-1">
-              Calculadora de Depreciación
+            <h2 className="text-xl font-semibold text-muted-foreground mt-1 lg:text-2xl">
+              Depreciación
             </h2>
           </div>
         </div>
