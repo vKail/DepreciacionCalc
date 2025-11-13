@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -27,6 +28,7 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
   const [timeUnit, setTimeUnit] = useState<TimeUnit>("years");
   const [method, setMethod] = useState<DepreciationMethod>("straight-line");
   const [productionUnits, setProductionUnits] = useState<string>("");
+  const [variableProductionUnits, setVariableProductionUnits] = useState<string>("");
   const [hasVAT, setHasVAT] = useState<boolean>(true);
   const [vatPercentage, setVatPercentage] = useState<string>("");
 
@@ -39,6 +41,26 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
       finalAssetValue = finalAssetValue * (1 + vatDecimal);
     }
 
+    // Parsear y validar unidades variables si el método lo requiere
+    let parsedVariableUnits: number[] | undefined;
+    if (method === "variable-production-units") {
+      // Dividir por líneas y filtrar vacías
+      const lines = variableProductionUnits.split('\n').filter(line => line.trim() !== '');
+      parsedVariableUnits = lines.map(line => parseFloat(line.trim()));
+      
+      // Validar que la cantidad de valores coincida con la vida útil
+      if (parsedVariableUnits.length !== parseFloat(usefulLife)) {
+        alert(`Debes ingresar exactamente ${usefulLife} valores, uno por cada período.`);
+        return;
+      }
+      
+      // Validar que todos sean números válidos
+      if (parsedVariableUnits.some(isNaN)) {
+        alert('Todos los valores deben ser números válidos.');
+        return;
+      }
+    }
+
     const inputs: FormInputs = {
       usefulLife: parseFloat(usefulLife),
       assetValue: finalAssetValue,
@@ -47,6 +69,7 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
       hasVAT,
       vatPercentage: !hasVAT ? parseFloat(vatPercentage) : undefined,
       ...(method === "production-units" && { productionUnits: parseFloat(productionUnits) }),
+      ...(method === "variable-production-units" && { variableProductionUnits: parsedVariableUnits }),
     };
 
     onCalculate(inputs);
@@ -118,7 +141,7 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
             {/* Vida Útil */}
             <div className="space-y-2">
               <Label htmlFor="usefulLife">
-                Vida Útil ({timeUnit === "years" ? "en años" : timeUnit === "months" ? "en meses" : "en días"})
+                Vida Útil ({timeUnit === "years" ? "en años" : timeUnit === "months" ? "en meses" : timeUnit === "weeks" ? "en semanas" : "en días"})
               </Label>
               <Input
                 id="usefulLife"
@@ -152,6 +175,12 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="weeks" id="weeks" />
+                  <Label htmlFor="weeks" className="font-normal cursor-pointer">
+                    Semanas
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
                   <RadioGroupItem value="days" id="days" />
                   <Label htmlFor="days" className="font-normal cursor-pointer">
                     Días
@@ -181,6 +210,9 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
                   <SelectItem value="production-units">
                     Unidades de Producción
                   </SelectItem>
+                  <SelectItem value="variable-production-units">
+                    Unidades de Producción Variable
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -202,6 +234,44 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
                 <p className="text-xs text-muted-foreground">
                   Total de unidades que se producirán durante toda la vida útil del activo
                 </p>
+              </div>
+            )}
+
+            {/* Unidades Producidas Variables - Solo para método de unidades de producción variable */}
+            {method === "variable-production-units" && (
+              <div className="space-y-2">
+                <Label htmlFor="variableProductionUnits">
+                  Unidades Producidas por {timeUnit === "years" ? "Año" : timeUnit === "months" ? "Mes" : timeUnit === "weeks" ? "Semana" : "Día"}
+                </Label>
+                <Textarea
+                  id="variableProductionUnits"
+                  placeholder={`Ingresa un valor por línea.\nEjemplo para ${usefulLife || "N"} períodos:\n8000\n12000\n15000\n...`}
+                  value={variableProductionUnits}
+                  onChange={(e) => setVariableProductionUnits(e.target.value)}
+                  required
+                  rows={Math.min(parseInt(usefulLife) || 5, 10)}
+                  className="font-mono"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Ingresa {usefulLife || "N"} valores, uno por línea. Cada valor representa las unidades producidas en ese período.
+                </p>
+                {/* Mostrar total de unidades producidas */}
+                {variableProductionUnits.trim() && (
+                  <div className="p-3 bg-muted rounded-md">
+                    <p className="text-sm font-medium">
+                      Total de Unidades Producidas: {" "}
+                      <span className="text-primary font-semibold">
+                        {variableProductionUnits
+                          .split('\n')
+                          .filter(line => line.trim() !== '')
+                          .map(line => parseFloat(line.trim()))
+                          .filter(num => !isNaN(num))
+                          .reduce((sum, num) => sum + num, 0)
+                          .toFixed(2)}
+                      </span>
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

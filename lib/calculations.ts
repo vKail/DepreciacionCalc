@@ -165,3 +165,53 @@ export function calculateProductionUnits(
 
   return results;
 }
+
+/**
+ * Método de Unidades de Producción Variable
+ * Depreciación por unidad = Valor activo / Suma de todas las unidades producidas
+ * Depreciación por período = Unidades del período × Depreciación por unidad
+ * 
+ * En este método, el usuario ingresa las unidades producidas para cada período
+ * individualmente, permitiendo una depreciación variable según la producción real.
+ */
+export function calculateVariableProductionUnits(
+  assetValue: number,
+  variableUnits: number[]
+): ProductionUnitsRow[] {
+  const results: ProductionUnitsRow[] = [];
+  
+  // Calcula el total de unidades sumando todos los valores ingresados
+  const totalProductionUnits = variableUnits.reduce((sum, units) => sum + units, 0);
+  
+  // Calcula cuánto vale la depreciación por cada unidad producida
+  const depreciationPerUnit = assetValue / totalProductionUnits;
+
+  // Itera sobre cada período usando las unidades específicas de cada uno
+  for (let period = 1; period <= variableUnits.length; period++) {
+    const unitsProduced = variableUnits[period - 1];
+    
+    // La cuota varía según las unidades producidas en este período
+    const depreciationQuota = unitsProduced * depreciationPerUnit;
+
+    const accumulatedDepreciation =
+      period === 1
+        ? depreciationQuota
+        : results[period - 2].accumulatedDepreciation + depreciationQuota;
+
+    const netBookValue =
+      period === 1
+        ? assetValue - depreciationQuota
+        : results[period - 2].netBookValue - depreciationQuota;
+
+    results.push({
+      period,
+      unitsProduced,
+      depreciationPerUnit,
+      depreciationQuota,
+      accumulatedDepreciation,
+      netBookValue,
+    });
+  }
+
+  return results;
+}

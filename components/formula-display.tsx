@@ -113,6 +113,37 @@ export function FormulaDisplay({ method }: FormulaDisplayProps) {
         </div>
       ),
     },
+    "variable-production-units": {
+      title: "🏭 Fórmulas: Unidades de Producción Variable",
+      content: (
+        <div className="space-y-3">
+          <div>
+            <p className="font-medium mb-2">1. Total de Unidades:</p>
+            <div className="bg-muted p-4 rounded-md overflow-x-auto">
+              <BlockMath math="\text{Total de Unidades} = \sum_{i=1}^{n} \text{Unidades}_i" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Suma de todas las unidades producidas en cada período
+            </p>
+          </div>
+          <div>
+            <p className="font-medium mb-2">2. Depreciación por Unidad:</p>
+            <div className="bg-muted p-4 rounded-md overflow-x-auto">
+              <BlockMath math="\text{Depreciación por Unidad} = \frac{\text{Valor del Activo}}{\text{Total de Unidades}}" />
+            </div>
+          </div>
+          <div>
+            <p className="font-medium mb-2">3. Cuota de Depreciación (por período):</p>
+            <div className="bg-muted p-4 rounded-md overflow-x-auto">
+              <BlockMath math="\text{Cuota}_i = \text{Unidades}_i \times \text{Depreciación por Unidad}" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              La cuota varía según las unidades producidas en cada período
+            </p>
+          </div>
+        </div>
+      ),
+    },
   };
 
   const selectedFormula = formulas[method];

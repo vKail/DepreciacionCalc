@@ -1,6 +1,6 @@
-export type TimeUnit = "years" | "months" | "days";
+export type TimeUnit = "years" | "months" | "weeks" | "days";
 
-export type DepreciationMethod = "straight-line" | "sum-of-digits" | "declining-balance" | "production-units";
+export type DepreciationMethod = "straight-line" | "sum-of-digits" | "declining-balance" | "production-units" | "variable-production-units";
 
 export interface FormInputs {
   usefulLife: number;
@@ -8,6 +8,7 @@ export interface FormInputs {
   timeUnit: TimeUnit;
   method: DepreciationMethod;
   productionUnits?: number;
+  variableProductionUnits?: number[];
   hasVAT: boolean;
   vatPercentage?: number;
 }

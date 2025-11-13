@@ -8,12 +8,14 @@ import {
   SumOfDigitsTable,
   DecliningBalanceTable,
   ProductionUnitsTable,
+  VariableProductionUnitsTable,
 } from "@/components/depreciacion-tables";
 import {
   calculateStraightLine,
   calculateSumOfDigits,
   calculateDecliningBalance,
   calculateProductionUnits,
+  calculateVariableProductionUnits,
 } from "@/lib/calculations";
 import {
   FormInputs,
@@ -29,11 +31,12 @@ export default function Home() {
   const [sumOfDigitsResults, setSumOfDigitsResults] = useState<SumOfDigitsRow[]>([]);
   const [decliningBalanceResults, setDecliningBalanceResults] = useState<DecliningBalanceRow[]>([]);
   const [productionUnitsResults, setProductionUnitsResults] = useState<ProductionUnitsRow[]>([]);
+  const [variableProductionUnitsResults, setVariableProductionUnitsResults] = useState<ProductionUnitsRow[]>([]);
   const [currentMethod, setCurrentMethod] = useState<DepreciationMethod | null>(null);
   const [timeUnit, setTimeUnit] = useState<string>("years");
 
   const handleCalculate = (inputs: FormInputs) => {
-    const { usefulLife, assetValue, timeUnit, method, productionUnits } = inputs;
+    const { usefulLife, assetValue, timeUnit, method, productionUnits, variableProductionUnits } = inputs;
 
     setCurrentMethod(method);
     setTimeUnit(timeUnit);
@@ -42,6 +45,7 @@ export default function Home() {
     setSumOfDigitsResults([]);
     setDecliningBalanceResults([]);
     setProductionUnitsResults([]);
+    setVariableProductionUnitsResults([]);
 
     switch (method) {
       case "straight-line":
@@ -60,6 +64,12 @@ export default function Home() {
         if (productionUnits) {
           const productionUnitsCalc = calculateProductionUnits(assetValue, usefulLife, productionUnits);
           setProductionUnitsResults(productionUnitsCalc);
+        }
+        break;
+      case "variable-production-units":
+        if (variableProductionUnits && variableProductionUnits.length > 0) {
+          const variableProductionUnitsCalc = calculateVariableProductionUnits(assetValue, variableProductionUnits);
+          setVariableProductionUnitsResults(variableProductionUnitsCalc);
         }
         break;
     }
@@ -105,6 +115,9 @@ export default function Home() {
             )}
             {currentMethod === "production-units" && (
               <ProductionUnitsTable data={productionUnitsResults} unit={timeUnit} />
+            )}
+            {currentMethod === "variable-production-units" && (
+              <VariableProductionUnitsTable data={variableProductionUnitsResults} unit={timeUnit} />
             )}
             {currentMethod === null && (
               <div className="flex items-center justify-center h-full min-h-[400px]">

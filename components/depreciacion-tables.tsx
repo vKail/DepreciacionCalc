@@ -41,7 +41,7 @@ export function StraightLineTable({ data, unit }: StraightLineTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : unit === "weeks" ? "Semana" : "Día"}</TableHead>
                 <TableHead className="text-right">Cuota de Depreciación</TableHead>
                 <TableHead className="text-right">Depreciación Acumulada</TableHead>
                 <TableHead className="text-right">Valor Neto en Libros</TableHead>
@@ -97,7 +97,7 @@ export function SumOfDigitsTable({ data, unit }: SumOfDigitsTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : unit === "weeks" ? "Semana" : "Día"}</TableHead>
                 <TableHead className="text-right">Factor</TableHead>
                 <TableHead className="text-right">Porcentaje</TableHead>
                 <TableHead className="text-right">Valor Activo</TableHead>
@@ -165,7 +165,7 @@ export function DecliningBalanceTable({ data, unit }: DecliningBalanceTableProps
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : unit === "weeks" ? "Semana" : "Día"}</TableHead>
                 <TableHead className="text-right">Tasa de Depreciación</TableHead>
                 <TableHead className="text-right">Valor sin Depreciar</TableHead>
                 <TableHead className="text-right">Cuota Depreciación</TableHead>
@@ -229,7 +229,72 @@ export function ProductionUnitsTable({ data, unit }: ProductionUnitsTableProps) 
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : "Día"}</TableHead>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : unit === "weeks" ? "Semana" : "Día"}</TableHead>
+                <TableHead className="text-right">Unidades Producidas</TableHead>
+                <TableHead className="text-right">Depreciación por Unidad</TableHead>
+                <TableHead className="text-right">Cuota Depreciación</TableHead>
+                <TableHead className="text-right">Depreciación Acumulada</TableHead>
+                <TableHead className="text-right">Valor Neto en Libros</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.map((row) => (
+                <TableRow key={row.period}>
+                  <TableCell>{row.period}</TableCell>
+                  <TableCell className="text-right">
+                    {row.unitsProduced.toFixed(2)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    ${row.depreciationPerUnit.toFixed(4)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    ${row.depreciationQuota.toFixed(2)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    ${row.accumulatedDepreciation.toFixed(2)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    ${row.netBookValue.toFixed(2)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+
+interface VariableProductionUnitsTableProps {
+  data: ProductionUnitsRow[];
+  unit: string;
+}
+
+export function VariableProductionUnitsTable({ data, unit }: VariableProductionUnitsTableProps) {
+  if (data.length === 0) return null;
+
+  return (
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <CardTitle>Método de Unidades de Producción Variable</CardTitle>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => downloadCSV(data, "variable-production-units", unit)}
+          className="gap-2"
+        >
+          <Download className="h-4 w-4" />
+          Descargar CSV
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className="rounded-md border overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{unit === "years" ? "Año" : unit === "months" ? "Mes" : unit === "weeks" ? "Semana" : "Día"}</TableHead>
                 <TableHead className="text-right">Unidades Producidas</TableHead>
                 <TableHead className="text-right">Depreciación por Unidad</TableHead>
                 <TableHead className="text-right">Cuota Depreciación</TableHead>
