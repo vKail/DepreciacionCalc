@@ -255,7 +255,6 @@ export function DepreciacionForm({ onCalculate, currentMethod }: DepreciacionFor
                 <p className="text-xs text-muted-foreground">
                   Ingresa {usefulLife || "N"} valores, uno por línea. Cada valor representa las unidades producidas en ese período.
                 </p>
-                {/* Mostrar total de unidades producidas */}
                 {variableProductionUnits.trim() && (
                   <div className="p-3 bg-muted rounded-md">
                     <p className="text-sm font-medium">
