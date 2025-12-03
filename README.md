@@ -7,21 +7,32 @@ Asset depreciation calculator developed with TypeScript. It implements multiple 
 Web application that allows calculating asset depreciation using different accounting methods (straight-line, accelerated, sum-of-the-years' digits). Designed to facilitate financial analysis and corporate tax planning.
 
 **Features:**
-- Straight-line depreciation method
-- Accelerated method
-- Sum-of-the-years' digits
-- Year-by-year results visualization
-- Calculation export
+
+-   Straight-line depreciation method
+    
+-   Accelerated method
+    
+-   Sum-of-the-years' digits
+    
+-   Year-by-year results visualization
+    
+-   Calculation export
+    
 
 ## 🛠️ Technologies
 
-- TypeScript
-- React
-- Zustand (state management)
-- Tailwind CSS
+-   TypeScript
+    
+-   React
+    
+-   Zustand (state management)
+    
+-   Tailwind CSS
+    
 
 ## 🚀 Installation
-```bash
+
+```
 # Clone the repository
 git clone [https://github.com/vKail/DepreciacionCalc.git](https://github.com/vKail/DepreciacionCalc.git)
 cd DepreciacionCalc
@@ -31,3 +42,24 @@ npm install
 
 # Run in development
 npm run dev
+
+```
+
+## 📂 Project Structure
+
+```
+src/
+├── core/
+├── features/
+│   ├── depreciation/
+│   │   ├── presentation/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── interfaces/
+└── shared/
+
+```
+
+## 👥 Contributors
+
+-   **Adrian Jurado** - [@vKail](https://github.com/vKail "null")
